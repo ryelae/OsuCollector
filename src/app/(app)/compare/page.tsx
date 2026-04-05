@@ -2,6 +2,7 @@ import { listUploads } from '@/lib/db';
 import { ComparePicker } from './compare-picker';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Compare' };
 
 interface Props {

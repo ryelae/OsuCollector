@@ -41,7 +41,7 @@ export default function UploadDetailPage({ params }: Props) {
           </div>
           <div className="flex gap-2 shrink-0">
             <CopyLinkButton uploadId={upload.id} />
-            <DeleteUploadButton uploadId={upload.id} />
+            <DeleteUploadButton uploadId={upload.id} redirectTo="/uploads" />
           </div>
         </div>
 

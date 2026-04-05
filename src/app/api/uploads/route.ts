@@ -26,6 +26,8 @@ export async function POST(request: Request) {
 
   const file = formData.get('file') as File | null;
   const uploaderName = ((formData.get('uploaderName') as string) || '').trim() || 'Anonymous';
+  const selectedIndicesRaw = formData.get('selectedIndices') as string | null;
+  const selectedIndices: number[] | null = selectedIndicesRaw ? JSON.parse(selectedIndicesRaw) : null;
 
   if (!file) {
     return Response.json({ error: 'No file provided' }, { status: 400 });
@@ -71,13 +73,19 @@ export async function POST(request: Request) {
   const id = crypto.randomUUID();
   const filePath = path.join(UPLOADS_DIR, `${id}.db`);
   try {
+    await fs.mkdir(UPLOADS_DIR, { recursive: true });
     await fs.writeFile(filePath, buffer);
   } catch (e) {
     return Response.json({ error: 'Failed to save file' }, { status: 500 });
   }
 
+  // Filter to selected collections if the client sent a selection
+  const collectionsToSave = selectedIndices
+    ? parsed.collections.filter((_, i) => selectedIndices.includes(i))
+    : parsed.collections;
+
   // Persist to database
-  const totalMaps = parsed.collections.reduce((sum, c) => sum + c.beatmapHashes.length, 0);
+  const totalMaps = collectionsToSave.reduce((sum, c) => sum + c.beatmapHashes.length, 0);
 
   try {
     const uploadId = createUpload({
@@ -85,13 +93,13 @@ export async function POST(request: Request) {
       originalFilename: file.name,
       filePath,
       parserVersion: parsed.version,
-      collectionCount: parsed.collections.length,
+      collectionCount: collectionsToSave.length,
       totalMaps,
     });
 
     createCollections(
       uploadId,
-      parsed.collections.map((c) => ({ name: c.name, hashes: c.beatmapHashes }))
+      collectionsToSave.map((c) => ({ name: c.name, hashes: c.beatmapHashes }))
     );
 
     return Response.json({

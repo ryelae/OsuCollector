@@ -2,8 +2,10 @@ import Link from 'next/link';
 import { listUploads } from '@/lib/db';
 import { formatRelativeDate, pluralise } from '@/lib/utils';
 import { UploadForm } from '@/components/upload-form';
+import { DeleteUploadButton } from './[id]/delete-button';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Uploads' };
 
 export default function UploadsPage() {
@@ -54,6 +56,7 @@ export default function UploadsPage() {
                   <Link href={`/uploads/${u.id}`} className="btn-secondary text-xs px-2 py-1">
                     View →
                   </Link>
+                  <DeleteUploadButton uploadId={u.id} />
                 </div>
               </div>
             ))}

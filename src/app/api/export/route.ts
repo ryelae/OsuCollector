@@ -68,7 +68,8 @@ export async function POST(request: Request) {
 
     const buffer = writeCollectionDb({ collections: collectionsToWrite });
 
-    return new Response(buffer, {
+    // Convert Node Buffer → Uint8Array so the Web API Response accepts it
+    return new Response(new Uint8Array(buffer), {
       headers: {
         'Content-Type': 'application/octet-stream',
         'Content-Disposition': 'attachment; filename="collection.db"',

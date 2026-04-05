@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export function DeleteUploadButton({ uploadId }: { uploadId: string }) {
+interface Props {
+  uploadId: string;
+  /** If provided, navigate here after successful delete. Otherwise just refresh in place. */
+  redirectTo?: string;
+}
+
+export function DeleteUploadButton({ uploadId, redirectTo }: Props) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -13,7 +19,9 @@ export function DeleteUploadButton({ uploadId }: { uploadId: string }) {
     try {
       const res = await fetch(`/api/uploads/${uploadId}`, { method: 'DELETE' });
       if (res.ok) {
-        router.push('/uploads');
+        if (redirectTo) {
+          router.push(redirectTo);
+        }
         router.refresh();
       }
     } finally {
@@ -26,11 +34,7 @@ export function DeleteUploadButton({ uploadId }: { uploadId: string }) {
     return (
       <div className="flex items-center gap-2">
         <span className="text-xs text-slate-500">Sure?</span>
-        <button
-          onClick={handleDelete}
-          disabled={loading}
-          className="btn-danger text-xs"
-        >
+        <button onClick={handleDelete} disabled={loading} className="btn-danger text-xs">
           {loading ? 'Deleting…' : 'Yes, delete'}
         </button>
         <button

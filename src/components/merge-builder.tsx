@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { cn, pluralise } from '@/lib/utils';
 import type { Upload, Collection } from '@/lib/db';
 
@@ -21,10 +21,25 @@ interface Props {
 export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
   const [uploads] = useState<Upload[]>(initialUploads);
 
-  // Which uploads are expanded (showing their collections)
-  const [expandedUploadIds, setExpandedUploadIds] = useState<Set<string>>(
-    () => new Set(initialIncludeId ? [initialIncludeId] : [])
-  );
+  // Group uploads by uploaderName so same-name uploaders merge into one row
+  const uploadGroups = useMemo(() => {
+    const groups = new Map<string, Upload[]>();
+    for (const upload of uploads) {
+      const key = upload.uploaderName;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key)!.push(upload);
+    }
+    return groups;
+  }, [uploads]);
+
+  // Which groups are expanded (keyed by uploaderName)
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => {
+    if (initialIncludeId) {
+      const upload = initialUploads.find((u) => u.id === initialIncludeId);
+      return upload ? new Set([upload.uploaderName]) : new Set();
+    }
+    return new Set();
+  });
 
   // Collections fetched per upload
   const [uploadCollections, setUploadCollections] = useState<Map<string, Collection[]>>(
@@ -68,15 +83,15 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
     }
   }, [initialIncludeId, loadCollections]);
 
-  const toggleUpload = async (uploadId: string) => {
-    const next = new Set(expandedUploadIds);
-    if (next.has(uploadId)) {
-      next.delete(uploadId);
+  const toggleGroup = async (groupName: string, groupUploads: Upload[]) => {
+    const next = new Set(expandedGroups);
+    if (next.has(groupName)) {
+      next.delete(groupName);
     } else {
-      next.add(uploadId);
-      await loadCollections(uploadId);
+      next.add(groupName);
+      await Promise.all(groupUploads.map((u) => loadCollections(u.id)));
     }
-    setExpandedUploadIds(next);
+    setExpandedGroups(next);
   };
 
   const isCollectionSelected = (collectionId: string) =>
@@ -174,16 +189,17 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
           </div>
         ) : (
           <div className="space-y-2">
-            {uploads.map((upload) => {
-              const isExpanded = expandedUploadIds.has(upload.id);
-              const cols = uploadCollections.get(upload.id) ?? [];
-              const isLoading = loadingUploadId === upload.id;
+            {Array.from(uploadGroups.entries()).map(([groupName, groupUploads]) => {
+              const isExpanded = expandedGroups.has(groupName);
+              const isLoading = groupUploads.some((u) => loadingUploadId === u.id);
+              const cols = groupUploads.flatMap((u) => uploadCollections.get(u.id) ?? []);
+              const totalCollectionCount = groupUploads.reduce((s, u) => s + u.collectionCount, 0);
 
               return (
-                <div key={upload.id} className="card overflow-hidden">
-                  {/* Upload header */}
+                <div key={groupName} className="card overflow-hidden">
+                  {/* Group header */}
                   <button
-                    onClick={() => toggleUpload(upload.id)}
+                    onClick={() => toggleGroup(groupName, groupUploads)}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors text-left"
                   >
                     <div className="flex items-center gap-3">
@@ -196,11 +212,9 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                         ▶
                       </span>
                       <div>
-                        <span className="font-medium text-sm text-slate-900">
-                          {upload.uploaderName}
-                        </span>
+                        <span className="font-medium text-sm text-slate-900">{groupName}</span>
                         <span className="text-xs text-slate-400 ml-2">
-                          {pluralise(upload.collectionCount, 'collection')}
+                          {pluralise(totalCollectionCount, 'collection')}
                         </span>
                       </div>
                     </div>
@@ -212,7 +226,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                     )}
                   </button>
 
-                  {/* Collections list */}
+                  {/* Collections list — all uploads in this group combined */}
                   {isExpanded && !isLoading && (
                     <div className="border-t border-slate-100">
                       {cols.length === 0 ? (
@@ -220,6 +234,9 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                       ) : (
                         cols.map((c) => {
                           const checked = isCollectionSelected(c.id);
+                          const ownerUpload = groupUploads.find((u) =>
+                            (uploadCollections.get(u.id) ?? []).some((uc) => uc.id === c.id)
+                          )!;
                           return (
                             <label
                               key={c.id}
@@ -231,7 +248,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                               <input
                                 type="checkbox"
                                 checked={checked}
-                                onChange={() => toggleCollection(c, upload)}
+                                onChange={() => toggleCollection(c, ownerUpload)}
                                 className="accent-brand-500 w-4 h-4 rounded"
                               />
                               <span className="flex-1 truncate text-slate-800">
