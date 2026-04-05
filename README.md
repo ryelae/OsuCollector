@@ -1,7 +1,7 @@
 # osu! Collection Hub
 
 A small private web app for 2–3 friends to upload, browse, compare, merge, and export
-**osu! stable** `collection.db` files.
+**osu! stable** `collection.db` files. Desktop companion is a WIP
 
 ---
 
