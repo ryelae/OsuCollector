@@ -16,49 +16,58 @@ export default function HomePage() {
     <div className="max-w-3xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">osu! Collection Hub</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">osu! Collection Hub</h1>
         <p className="text-slate-500 mt-1 text-sm">
-          Share and merge <strong>osu! stable</strong> collections with friends.
+          Upload and share <strong>osu! stable</strong> collections with friends.
+        </p>
+        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1.5">
+          Compare and merge are available here but are largely handled by the desktop app, which also supports downloading missing maps.
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-8">
         <div className="stat-card">
-          <span className="text-2xl font-bold text-slate-900">{uploads.length}</span>
+          <span className="text-2xl font-bold text-slate-900 dark:text-slate-100">{uploads.length}</span>
           <span className="text-xs text-slate-500">Uploads</span>
         </div>
         <div className="stat-card">
-          <span className="text-2xl font-bold text-slate-900">
+          <span className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             {totalCollections.toLocaleString()}
           </span>
           <span className="text-xs text-slate-500">Collections</span>
         </div>
         <div className="stat-card">
-          <span className="text-2xl font-bold text-slate-900">{totalMaps.toLocaleString()}</span>
+          <span className="text-2xl font-bold text-slate-900 dark:text-slate-100">{totalMaps.toLocaleString()}</span>
           <span className="text-xs text-slate-500">Map entries</span>
         </div>
       </div>
 
       {/* Quick actions */}
       <div className="grid grid-cols-2 gap-3 mb-8 sm:grid-cols-3">
-        <Link href="/uploads" className="card p-4 hover:bg-slate-50 transition-colors group">
+        <Link href="/uploads" className="card p-4 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
           <div className="text-2xl mb-2">📤</div>
-          <div className="font-medium text-sm text-slate-900 group-hover:text-brand-600">
+          <div className="font-medium text-sm text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400">
             Upload
           </div>
           <div className="text-xs text-slate-500 mt-0.5">Add your collection.db</div>
         </Link>
-        <Link href="/compare" className="card p-4 hover:bg-slate-50 transition-colors group">
-          <div className="text-2xl mb-2">🔀</div>
-          <div className="font-medium text-sm text-slate-900 group-hover:text-brand-600">
+        <Link href="/compare" className="card p-4 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
+          <div className="flex items-start justify-between mb-2">
+            <span className="text-2xl">🔀</span>
+            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500">desktop app</span>
+          </div>
+          <div className="font-medium text-sm text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400">
             Compare
           </div>
           <div className="text-xs text-slate-500 mt-0.5">Diff two uploads</div>
         </Link>
-        <Link href="/merge" className="card p-4 hover:bg-slate-50 transition-colors group">
-          <div className="text-2xl mb-2">🗂️</div>
-          <div className="font-medium text-sm text-slate-900 group-hover:text-brand-600">
+        <Link href="/merge" className="card p-4 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
+          <div className="flex items-start justify-between mb-2">
+            <span className="text-2xl">🗂️</span>
+            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500">desktop app</span>
+          </div>
+          <div className="font-medium text-sm text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400">
             Merge & Export
           </div>
           <div className="text-xs text-slate-500 mt-0.5">Build a new collection.db</div>
@@ -69,20 +78,20 @@ export default function HomePage() {
       {recentUploads.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-slate-900 text-sm">Recent uploads</h2>
+            <h2 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">Recent uploads</h2>
             <Link href="/uploads" className="text-xs text-brand-600 hover:underline">
               View all →
             </Link>
           </div>
-          <div className="card divide-y divide-slate-100">
+          <div className="card divide-y divide-slate-100 dark:divide-slate-700">
             {recentUploads.map((u) => (
               <Link
                 key={u.id}
                 href={`/uploads/${u.id}`}
-                className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors"
+                className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               >
                 <div className="min-w-0">
-                  <span className="font-medium text-sm text-slate-900">{u.uploaderName}</span>
+                  <span className="font-medium text-sm text-slate-900 dark:text-slate-100">{u.uploaderName}</span>
                   <span className="text-slate-400 text-xs ml-2">{formatRelativeDate(u.createdAt)}</span>
                 </div>
                 <div className="flex items-center gap-3 shrink-0 ml-4">

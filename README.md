@@ -1,21 +1,34 @@
-# osu! Collection Hub
+# osu! Collection Hub — Web App
 
-A small private web app for 2–3 friends to upload, browse, compare, merge, and export
-**osu! stable** `collection.db` files.
+Private web app for uploading and sharing **osu! stable** `collection.db` files with friends.
+Pair it with the [desktop app](https://github.com/ryelae/OsuCollectorDesktopApp) for full functionality (browsing, comparing, downloading missing maps).
 
 ---
 
 ## What it does
 
-| Feature     | Details                                                                               |
-| ----------- | ------------------------------------------------------------------------------------- |
-| **Upload**  | Drag-and-drop `collection.db`, name yourself, get a parsed summary                    |
-| **Browse**  | View all uploads, see every collection and its map count                              |
-| **Compare** | Pick any two uploads, see shared vs unique collections and per-collection map overlap |
-| **Merge**   | Select any collections from any uploads, rename output collections, deduplicate maps  |
-| **Export**  | Download a valid `collection.db` ready to drop into osu! stable                       |
-| **Share**   | Each upload has a permanent shareable link                                            |
-| **Auth**    | Optional shared password (env var) — off by default for local use                     |
+| Feature     | Details                                                                             |
+| ----------- | ----------------------------------------------------------------------------------- |
+| **Upload**  | Drag-and-drop `collection.db`, select which collections to include, name yourself   |
+| **Browse**  | View all uploads, see every collection and its map count                            |
+| **Share**   | Each upload has a permanent shareable link                                          |
+| **Auth**    | Optional shared password (env var) — off by default for local use                   |
+| **Compare** | _(secondary)_ Pick two uploads and see map overlap stats                            |
+| **Merge**   | _(secondary)_ Select collections, rename, deduplicate, export a new `collection.db` |
+
+> **Compare and Merge** are available but are largely superseded by the desktop app, which also handles resolving and downloading missing beatmaps.
+
+---
+
+## Companion desktop app
+
+The [desktop app](https://github.com/ryelae/OsuCollectorDesktopApp) connects to this web app and adds:
+
+- Browsing uploaded collections from other users
+- Resolving missing beatmap hashes via the osu! API v1
+- Downloading missing `.osz` files directly to your osu! Songs folder
+- Writing imported collections into your local `collection.db`
+- Light/dark mode, auto-detected osu! path, multiple download mirrors
 
 ---
 
@@ -37,7 +50,7 @@ osu!lazer uses a different format and is not supported.
 
 ```bash
 git clone <your-repo-url>
-cd osu-collection-hub
+cd osuCollectorInHouse
 npm install
 ```
 
@@ -71,23 +84,12 @@ Data is stored in `./data/` (SQLite DB + uploaded files). This directory is giti
 
 ## Auth / private mode
 
-The simplest acceptable auth is a single shared password set via `APP_PASSWORD`.
+A single shared password set via `APP_PASSWORD`.
 
-- **No `APP_PASSWORD` set** → the app is fully open. Fine for local use on a private machine.
-- **`APP_PASSWORD` set** → the app shows a login page. Enter the password to get a 30-day session cookie. Share the password with your friends.
+- **No `APP_PASSWORD` set** → fully open. Fine for local use on a private machine.
+- **`APP_PASSWORD` set** → shows a login page. Enter the password to get a 30-day session cookie.
 
-There is no per-user auth; anyone with the password can see and delete all uploads. This is intentional for a tiny private group.
-
----
-
-## Deduplication behaviour
-
-When merging collections:
-
-- **Merge same-named** _(default)_: if two selected collections share the same output name, their maps are combined and deduplicated by beatmap MD5 hash. This is usually the friendliest result — e.g., if you and a friend both have "Favorites", the exported collection contains the union without duplicates.
-- **Keep separate**: each collection is kept individually; maps within each collection are still deduplicated, but same-named collections are preserved as-is.
-
-You can rename any collection in the merge UI before exporting.
+There is no per-user auth; anyone with the password can see and delete all uploads. This is intentional for a small private group.
 
 ---
 
@@ -107,7 +109,17 @@ Make sure osu! is **closed** before copying the file to avoid partial reads.
 
 ## Deployment
 
-### Option A — Node.js server (simplest)
+### Option A — Fly.io (recommended)
+
+```bash
+fly launch
+fly secrets set APP_PASSWORD=your_secret
+fly deploy
+```
+
+Mount a persistent volume at `/app/data` for the SQLite DB and uploaded files.
+
+### Option B — Node.js server
 
 ```bash
 npm run build
@@ -115,38 +127,16 @@ APP_PASSWORD=secret npm start
 # Runs on port 3000
 ```
 
-Use a reverse proxy (nginx, Caddy) to add HTTPS.
-
-### Option B — Docker
+### Option C — Docker
 
 ```bash
-# Build
 docker build -t osu-collection-hub .
-
-# Run (persist data with a volume)
 docker run \
   -p 3000:3000 \
   -e APP_PASSWORD=your_secret \
   -v $(pwd)/data:/app/data \
   osu-collection-hub
 ```
-
-**Important for Docker:** the `next.config.js` must enable `output: 'standalone'` for the standalone build to work. Add this if needed:
-
-```js
-// next.config.js
-const nextConfig = {
-  output: "standalone",
-  serverExternalPackages: ["better-sqlite3"],
-};
-```
-
-### Option C — Fly.io / Railway / Render
-
-1. Push code to a git repo.
-2. Set `APP_PASSWORD` as a secret environment variable.
-3. Mount a persistent volume at `/app/data`.
-4. Deploy. These platforms run `npm start` automatically.
 
 ---
 
@@ -160,6 +150,18 @@ Tests cover the binary parser and writer (round-trip, edge cases, error handling
 
 ---
 
+## Tech stack
+
+| Layer     | Technology                          |
+| --------- | ----------------------------------- |
+| Framework | Next.js 14 (App Router), TypeScript |
+| Styling   | Tailwind CSS, light + dark mode     |
+| Database  | SQLite via better-sqlite3           |
+| Auth      | Shared password, SHA-256 cookie     |
+| Hosting   | Fly.io (persistent volume)          |
+
+---
+
 ## Project structure
 
 ```
@@ -167,8 +169,9 @@ src/
   lib/
     collection-parser.ts   # Binary collection.db parser
     collection-writer.ts   # Binary collection.db writer
+    collection-preview.ts  # Browser-safe preview parser (names + counts only)
     db.ts                  # SQLite layer (better-sqlite3)
-    auth.ts                # Simple shared-password auth helpers
+    auth.ts                # Shared-password auth helpers
     utils.ts               # Shared utilities
   middleware.ts            # Auth guard (edge runtime)
   app/
@@ -181,14 +184,13 @@ src/
     login/                 # Standalone login page
     api/
       uploads/             # POST (upload), GET list, GET/DELETE by id
+      uploads/[id]/collections/[collectionId]/hashes/  # GET hashes for desktop app
       export/              # POST → binary collection.db download
       auth/login|logout    # Session management
   components/
-    nav.tsx                # Sidebar navigation
-    upload-form.tsx        # Drag-drop upload form
+    nav.tsx                # Sidebar navigation + theme toggle
+    upload-form.tsx        # Drag-drop upload form with collection picker
     merge-builder.tsx      # Interactive merge/export UI
-tests/
-  parser.test.ts           # Parser + writer tests
 data/                      # Runtime data (gitignored)
   db.sqlite
   uploads/
@@ -200,23 +202,5 @@ data/                      # Runtime data (gitignored)
 
 - **Private / small-scale only.** No rate limiting, no per-user isolation, no audit log.
 - **osu! stable format only.** osu!lazer's `client.realm` format is not supported.
-- **No beatmap metadata.** Collections display MD5 hashes only; song titles/artists are not resolved (would require `osu!.db` or the osu! API). The schema is designed to support metadata later.
 - **Single shared password.** There is no per-user account system.
 - **Local file storage.** Uploaded files live on disk next to the app. Back up `./data/` regularly.
-- **Collection entries with empty hashes** are stored as empty strings; osu! ignores them on import.
-
----
-
-## Data model
-
-```
-Upload
-  id, uploaderName, originalFilename, createdAt, filePath,
-  parserVersion, appVersion, collectionCount, totalMaps
-
-Collection  (belongs to Upload)
-  id, uploadId, name, mapCount, position
-
-CollectionEntry  (belongs to Collection)
-  id, collectionId, beatmapHash, position
-```

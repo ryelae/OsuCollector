@@ -21,16 +21,17 @@
     @apply bg-transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-full;
+    @apply bg-slate-300 rounded-full dark:bg-slate-700;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-400;
+    @apply bg-slate-400 dark:bg-slate-600;
   }
 }
 
 @layer components {
   .card {
-    @apply bg-white border border-slate-200 rounded-xl shadow-sm;
+    @apply bg-white border border-slate-200 rounded-xl shadow-sm
+           dark:bg-slate-800 dark:border-slate-700 dark:shadow-[0_1px_3px_0_rgb(0_0_0/0.3)];
   }
 
   .btn-primary {
@@ -46,7 +47,9 @@
            bg-white border border-slate-200 text-slate-700 font-medium text-sm
            hover:bg-slate-50 active:bg-slate-100
            disabled:opacity-50 disabled:cursor-not-allowed
-           transition-colors;
+           transition-colors
+           dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200
+           dark:hover:bg-slate-700 dark:active:bg-slate-600;
   }
 
   .btn-danger {
@@ -54,7 +57,9 @@
            bg-red-50 border border-red-200 text-red-600 font-medium text-sm
            hover:bg-red-100 active:bg-red-200
            disabled:opacity-50 disabled:cursor-not-allowed
-           transition-colors;
+           transition-colors
+           dark:bg-red-950 dark:border-red-900 dark:text-red-400
+           dark:hover:bg-[#5a0f0f];
   }
 
   .stat-card {
@@ -66,21 +71,36 @@
   }
 
   .badge-pink {
-    @apply badge bg-brand-50 text-brand-700;
+    @apply badge bg-brand-50 text-brand-700
+           dark:bg-[#2d0a18] dark:text-[#ff6699];
   }
 
   .badge-slate {
-    @apply badge bg-slate-100 text-slate-600;
+    @apply badge bg-slate-100 text-slate-600
+           dark:bg-slate-800 dark:text-slate-400;
   }
 
   .badge-green {
-    @apply badge bg-green-50 text-green-700;
+    @apply badge bg-green-50 text-green-700
+           dark:bg-green-950 dark:text-green-400;
   }
 
   .input {
     @apply w-full px-3 py-2 rounded-lg border border-slate-200
            text-sm text-slate-900 placeholder:text-slate-400
            focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500
-           transition;
+           transition
+           dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100
+           dark:placeholder:text-slate-600 dark:focus:border-brand-500;
+  }
+
+  .alert-error {
+    @apply text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2
+           dark:text-red-400 dark:bg-red-950 dark:border-red-900;
+  }
+
+  .alert-success {
+    @apply text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2
+           dark:text-green-400 dark:bg-green-950 dark:border-green-800;
   }
 }

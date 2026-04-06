@@ -14,9 +14,9 @@ export default function UploadsPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-slate-900">Uploads</h1>
+        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">Uploads</h1>
         <p className="text-slate-500 text-sm mt-1">
-          Upload a <code className="bg-slate-100 px-1 rounded font-mono text-xs">collection.db</code>{' '}
+          Upload a <code className="bg-slate-100 dark:bg-slate-700 dark:text-slate-300 px-1 rounded font-mono text-xs">collection.db</code>{' '}
           from osu! stable to share it here.
         </p>
       </div>
@@ -32,16 +32,16 @@ export default function UploadsPage() {
         </div>
       ) : (
         <div>
-          <h2 className="font-semibold text-slate-700 text-sm mb-3">
+          <h2 className="font-semibold text-slate-700 dark:text-slate-300 text-sm mb-3">
             {pluralise(uploads.length, 'upload')}
           </h2>
-          <div className="card divide-y divide-slate-100">
+          <div className="card divide-y divide-slate-100 dark:divide-slate-700">
             {uploads.map((u) => (
-              <div key={u.id} className="flex items-center gap-4 px-4 py-3 hover:bg-slate-50">
+              <div key={u.id} className="flex items-center gap-4 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                 <div className="flex-1 min-w-0">
                   <Link
                     href={`/uploads/${u.id}`}
-                    className="font-medium text-sm text-slate-900 hover:text-brand-600"
+                    className="font-medium text-sm text-slate-900 dark:text-slate-100 hover:text-brand-600"
                   >
                     {u.uploaderName}
                   </Link>

@@ -15,9 +15,12 @@ export default function ComparePage({ searchParams }: Props) {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-slate-900">Compare uploads</h1>
+        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">Compare uploads</h1>
         <p className="text-slate-500 text-sm mt-1">
           Select two uploads to see which collections they share and how their maps overlap.
+        </p>
+        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1.5">
+          Full comparison and missing-map downloads are handled by the desktop app.
         </p>
       </div>
 

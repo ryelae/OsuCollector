@@ -152,7 +152,6 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
         return;
       }
 
-      // Trigger download
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -171,7 +170,6 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
     }
   };
 
-  // Compute preview stats
   const uniqueOutputNames = new Set(selected.map((s) => s.outputName || s.originalName));
   const totalSelectedMaps = selected.reduce((s, c) => s + c.mapCount, 0);
 
@@ -179,7 +177,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
       {/* Left: Source picker */}
       <div className="lg:col-span-3">
-        <h2 className="font-semibold text-slate-700 text-sm mb-3">
+        <h2 className="font-semibold text-slate-700 dark:text-slate-300 text-sm mb-3">
           1. Select collections to include
         </h2>
 
@@ -200,7 +198,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                   {/* Group header */}
                   <button
                     onClick={() => toggleGroup(groupName, groupUploads)}
-                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors text-left"
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-left"
                   >
                     <div className="flex items-center gap-3">
                       <span
@@ -212,7 +210,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                         ▶
                       </span>
                       <div>
-                        <span className="font-medium text-sm text-slate-900">{groupName}</span>
+                        <span className="font-medium text-sm text-slate-900 dark:text-slate-100">{groupName}</span>
                         <span className="text-xs text-slate-400 ml-2">
                           {pluralise(totalCollectionCount, 'collection')}
                         </span>
@@ -228,7 +226,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
 
                   {/* Collections list — all uploads in this group combined */}
                   {isExpanded && !isLoading && (
-                    <div className="border-t border-slate-100">
+                    <div className="border-t border-slate-100 dark:border-slate-700">
                       {cols.length === 0 ? (
                         <p className="text-xs text-slate-400 px-4 py-3">No collections.</p>
                       ) : (
@@ -242,7 +240,9 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                               key={c.id}
                               className={cn(
                                 'flex items-center gap-3 px-4 py-2 cursor-pointer transition-colors text-sm',
-                                checked ? 'bg-brand-50' : 'hover:bg-slate-50'
+                                checked
+                                  ? 'bg-brand-50 dark:bg-[#2d0a18]'
+                                  : 'hover:bg-slate-50 dark:hover:bg-slate-700'
                               )}
                             >
                               <input
@@ -251,7 +251,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                                 onChange={() => toggleCollection(c, ownerUpload)}
                                 className="accent-brand-500 w-4 h-4 rounded"
                               />
-                              <span className="flex-1 truncate text-slate-800">
+                              <span className="flex-1 truncate text-slate-800 dark:text-slate-200">
                                 {c.name || <em className="text-slate-400">unnamed</em>}
                               </span>
                               <span className="text-xs text-slate-400 shrink-0">
@@ -272,7 +272,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
 
       {/* Right: Merge config + export */}
       <div className="lg:col-span-2">
-        <h2 className="font-semibold text-slate-700 text-sm mb-3">2. Configure & export</h2>
+        <h2 className="font-semibold text-slate-700 dark:text-slate-300 text-sm mb-3">2. Configure & export</h2>
 
         <div className="card p-4 mb-4">
           <div className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
@@ -289,7 +289,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                 className="mt-0.5 accent-brand-500"
               />
               <div>
-                <div className="font-medium text-slate-800">Merge same-named</div>
+                <div className="font-medium text-slate-800 dark:text-slate-200">Merge same-named</div>
                 <div className="text-xs text-slate-400">
                   Collections with the same output name are merged and maps deduplicated by hash.
                 </div>
@@ -305,7 +305,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                 className="mt-0.5 accent-brand-500"
               />
               <div>
-                <div className="font-medium text-slate-800">Keep separate</div>
+                <div className="font-medium text-slate-800 dark:text-slate-200">Keep separate</div>
                 <div className="text-xs text-slate-400">
                   Each collection is kept as-is (maps deduped within each collection only).
                 </div>
@@ -317,19 +317,19 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
         {/* Selected list */}
         {selected.length > 0 ? (
           <div className="card mb-4 overflow-hidden">
-            <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-600">
+            <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
                 {selected.length} selected · {uniqueOutputNames.size} output collections ·{' '}
                 {totalSelectedMaps.toLocaleString()} maps
               </span>
               <button
                 onClick={() => setSelected([])}
-                className="text-xs text-slate-400 hover:text-red-500"
+                className="text-xs text-slate-400 hover:text-red-500 dark:hover:text-red-400"
               >
                 Clear all
               </button>
             </div>
-            <div className="max-h-64 overflow-y-auto divide-y divide-slate-50">
+            <div className="max-h-64 overflow-y-auto divide-y divide-slate-50 dark:divide-slate-700">
               {selected.map((s) => (
                 <div key={s.collectionId} className="flex items-center gap-2 px-3 py-2">
                   <div className="flex-1 min-w-0">
@@ -337,7 +337,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
                       type="text"
                       value={s.outputName}
                       onChange={(e) => updateOutputName(s.collectionId, e.target.value)}
-                      className="w-full text-xs border border-slate-200 rounded px-2 py-1 focus:outline-none focus:border-brand-400"
+                      className="w-full text-xs border border-slate-200 dark:border-slate-600 rounded px-2 py-1 focus:outline-none focus:border-brand-400 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
                       placeholder={s.originalName || 'Collection name'}
                     />
                     <div className="text-[10px] text-slate-400 mt-0.5 truncate">
@@ -361,17 +361,8 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
           </div>
         )}
 
-        {/* Export error / success */}
-        {exportError && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
-            {exportError}
-          </p>
-        )}
-        {exportSuccess && (
-          <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-3">
-            ✅ collection.db downloaded!
-          </p>
-        )}
+        {exportError && <p className="alert-error mb-3">{exportError}</p>}
+        {exportSuccess && <p className="alert-success mb-3">✅ collection.db downloaded!</p>}
 
         <button
           onClick={handleExport}

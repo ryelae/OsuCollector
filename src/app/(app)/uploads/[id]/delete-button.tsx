@@ -33,13 +33,13 @@ export function DeleteUploadButton({ uploadId, redirectTo }: Props) {
   if (confirming) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-xs text-slate-500">Sure?</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">Sure?</span>
         <button onClick={handleDelete} disabled={loading} className="btn-danger text-xs">
           {loading ? 'Deleting…' : 'Yes, delete'}
         </button>
         <button
           onClick={() => setConfirming(false)}
-          className="text-xs text-slate-400 hover:text-slate-600"
+          className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
         >
           Cancel
         </button>

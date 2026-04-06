@@ -36,7 +36,7 @@ export function ComparePicker({ uploads, initialLeft, initialRight }: Props) {
     <div className="card p-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">Left upload</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Left upload</label>
           <select
             className="input"
             value={left}
@@ -51,7 +51,7 @@ export function ComparePicker({ uploads, initialLeft, initialRight }: Props) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">Right upload</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Right upload</label>
           <select
             className="input"
             value={right}
@@ -67,7 +67,7 @@ export function ComparePicker({ uploads, initialLeft, initialRight }: Props) {
       </div>
 
       {left === right && left !== '' && (
-        <p className="text-sm text-amber-600 mt-3">Select two different uploads to compare.</p>
+        <p className="text-sm text-amber-600 dark:text-amber-400 mt-3">Select two different uploads to compare.</p>
       )}
 
       <button
