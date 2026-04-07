@@ -31,7 +31,7 @@ The [desktop app](https://github.com/ryelae/OsuCollectorDesktopApp) connects to 
 ## Supported osu! client
 
 **osu! stable only.** The app reads and writes the legacy `collection.db` binary format.
-osu!lazer uses a different format and is not supported.
+osu!lazer uses a different format and is not supported. I may start working on a lazer solution soon if my friends make the switch.
 
 ---
 
@@ -200,3 +200,9 @@ data/                      # Runtime data (gitignored)
 - **osu! stable format only.** osu!lazer's `client.realm` format is not supported.
 - **Single shared password.** There is no per-user account system.
 - **Local file storage.** Uploaded files live on disk next to the app. Back up `./data/` regularly.
+
+## Future Features
+- **Video / no video download preferences.** Currently defaults to downloading with video... haven't found a workaround yet
+- **Difficulty names for each song** Currently shows each difficulty as just the name - indistinguishable
+- **TBD**
+
