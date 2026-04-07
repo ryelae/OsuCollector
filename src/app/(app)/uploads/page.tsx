@@ -27,7 +27,7 @@ export default function UploadsPage() {
 
       {/* Upload list */}
       {uploads.length === 0 ? (
-        <div className="card p-10 text-center text-slate-400">
+        <div className="card p-8 text-center text-slate-400">
           <p className="text-sm">No uploads yet — use the form above to get started.</p>
         </div>
       ) : (

@@ -362,7 +362,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
         )}
 
         {exportError && <p className="alert-error mb-3">{exportError}</p>}
-        {exportSuccess && <p className="alert-success mb-3">✅ collection.db downloaded!</p>}
+        {exportSuccess && <p className="alert-success mb-3">collection.db downloaded</p>}
 
         <button
           onClick={handleExport}
@@ -378,7 +378,7 @@ export function MergeBuilder({ initialUploads, initialIncludeId }: Props) {
               Exporting…
             </>
           ) : (
-            <>⬇ Export collection.db</>
+            <>Export collection.db</>
           )}
         </button>
 

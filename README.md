@@ -7,16 +7,12 @@ Pair it with the [desktop app](https://github.com/ryelae/OsuCollectorDesktopApp)
 
 ## What it does
 
-| Feature     | Details                                                                             |
-| ----------- | ----------------------------------------------------------------------------------- |
-| **Upload**  | Drag-and-drop `collection.db`, select which collections to include, name yourself   |
-| **Browse**  | View all uploads, see every collection and its map count                            |
-| **Share**   | Each upload has a permanent shareable link                                          |
-| **Auth**    | Optional shared password (env var) — off by default for local use                   |
-| **Compare** | _(secondary)_ Pick two uploads and see map overlap stats                            |
-| **Merge**   | _(secondary)_ Select collections, rename, deduplicate, export a new `collection.db` |
-
-> **Compare and Merge** are available but are largely superseded by the desktop app, which also handles resolving and downloading missing beatmaps.
+| Feature    | Details                                                                           |
+| ---------- | --------------------------------------------------------------------------------- |
+| **Upload** | Drag-and-drop `collection.db`, select which collections to include, name yourself |
+| **Browse** | View all uploads, see every collection and its map count                          |
+| **Share**  | Each upload has a permanent shareable link                                        |
+| **Auth**   | Optional shared password (env var) — off by default for local use                 |
 
 ---
 

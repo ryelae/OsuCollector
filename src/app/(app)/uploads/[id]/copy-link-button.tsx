@@ -14,7 +14,7 @@ export function CopyLinkButton({ uploadId }: { uploadId: string }) {
 
   return (
     <button onClick={handleCopy} className="btn-secondary text-xs">
-      {copied ? '✅ Copied!' : '🔗 Share link'}
+      {copied ? 'Copied!' : 'Share link'}
     </button>
   );
 }

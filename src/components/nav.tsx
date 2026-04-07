@@ -16,26 +16,6 @@ const links = [
       </svg>
     ),
   },
-  {
-    href: '/compare',
-    label: 'Compare',
-    icon: (
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-      </svg>
-    ),
-  },
-  {
-    href: '/merge',
-    label: 'Merge & Export',
-    icon: (
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round"
-          d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-    ),
-  },
 ];
 
 function SunIcon() {
@@ -127,7 +107,7 @@ export function Nav() {
 
       {/* Footer — theme toggle */}
       <div className="p-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
-        <span className="text-[11px] text-slate-400 dark:text-slate-500">Private · {new Date().getFullYear()}</span>
+        <span className="text-[11px] text-slate-400 dark:text-slate-500">ryelae • 2026</span>
         <button
           onClick={toggleTheme}
           title={dark ? 'Switch to light mode' : 'Switch to dark mode'}

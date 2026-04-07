@@ -46,7 +46,7 @@ export default function UploadDetailPage({ params }: Props) {
         </div>
 
         {/* Stats row */}
-        <div className="flex gap-6 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+        <div className="flex gap-6 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 mb-1">
           <div>
             <div className="text-lg font-bold text-slate-900 dark:text-slate-100">{upload.collectionCount}</div>
             <div className="text-xs text-slate-500">Collections</div>
@@ -59,21 +59,6 @@ export default function UploadDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Quick compare/merge links */}
-        <div className="flex gap-2 mt-4">
-          <Link
-            href={`/compare?left=${upload.id}`}
-            className="btn-secondary text-xs"
-          >
-            Compare with…
-          </Link>
-          <Link
-            href={`/merge?include=${upload.id}`}
-            className="btn-secondary text-xs"
-          >
-            Include in Merge
-          </Link>
-        </div>
       </div>
 
       {/* Collections */}
