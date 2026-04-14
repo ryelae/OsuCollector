@@ -1,4 +1,4 @@
-# osu! Collection Hub — Web App
+# osu! Collection Hub Web App
 
 Private web app for uploading and sharing **osu! stable** `collection.db` files with friends.
 Pair it with the [desktop app](https://github.com/ryelae/OsuCollectorDesktopApp) for full functionality (browsing, comparing, downloading missing maps).
@@ -74,7 +74,6 @@ Data is stored in `./data/` (SQLite DB + uploaded files). This directory is giti
 | ------------------ | ------------------ | -------------------------------------------------------------------------------------- |
 | `APP_PASSWORD`     | _(not set)_        | If set, the app requires this password to access. Leave unset for open/local-only use. |
 | `MAX_UPLOAD_BYTES` | `52428800` (50 MB) | Maximum `collection.db` upload size in bytes.                                          |
-| `PORT`             | `3000`             | Server port (for `npm start` / Docker).                                                |
 
 ---
 
@@ -202,7 +201,7 @@ data/                      # Runtime data (gitignored)
 - **Local file storage.** Uploaded files live on disk next to the app. Back up `./data/` regularly.
 
 ## Future Features
-- **Video / no video download preferences.** Currently defaults to downloading with video... haven't found a workaround yet
+- **Video / no video download preferences.** Currently defaults to downloading with video... haven't solved yet
 - **Difficulty names for each song** Currently shows each difficulty as just the name - indistinguishable
 - **TBD**
 
